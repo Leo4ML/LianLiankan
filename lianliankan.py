@@ -35,14 +35,17 @@ def getScreenImage():
     scim.save('screen.png')
     return cv2.imread('screen.png')
 
+
+
+#方块连接区域距离左边距离14像素，顶部距离181像素
 def getAllSquare(screen_image,game_pos):
     game_x = game_pos[0] + 9
     game_y = game_pos[1] + 180
     all_square = []
-#游戏内容方块横纵个数 19*11  ,qq连连看的方块大小36*36 
+#游戏内容方块横纵个数 19*11  ,qq连连看的方块大小31*35 ，每个方框边缘像素宽2
     for x in range(0,19):
         for y in range(0,11):
-            square = screen_image[game_y +y*35:game_y + (y+1)*35, game_x + x*35:game_x + (x+1)*35]
+            square = screen_image[game_y +y*35:game_y + (y+1)*35, game_x + x*31:game_x + (x+1)*31]
             all_square.append(square)
     return list(map(lambda square : square[5:26,5:30],all_square))
 '''
