@@ -38,7 +38,7 @@ for x in range(0,19):
         square = screen_image[game_y +y*35:game_y + (y+1)*35, game_x + x*31:game_x + (x+1)*31]
         all_square.append(square)
 #注意，这里的小方块切除边缘，是先y轴，再x轴的
-all_square_list = list(map(lambda square : square[2:34,2:30],all_square))
+all_square_list = list(map(lambda square : square[4:32,4:28],all_square))
 
 types=[]
 empty_img = cv2.imread('empty.jpg')
