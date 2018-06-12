@@ -72,9 +72,9 @@ for square in all_square_list:
     if len(line) == 11:
         record.append(line)
         line=[]
-print(record)
 
 result = np.transpose(record)
+print(result)
 #    return record
 
 
@@ -83,8 +83,8 @@ def autoRelease(result,game_x,game_y):
         for j in range(len(result[0])):
             # 以上两个for循环，定位第一个选中点
             if result[i][j] != 0:
-                for m in range(0,len(result)):
-                    for n in range(0,len(result[0])):
+                for m in range(len(result)):
+                    for n in range(len(result[0])):
                         if result[m][n] != 0:
                             # 后两个for循环定位第二个选中点
                             if metching.canConnect(i,j,m,n,result):
@@ -99,15 +99,22 @@ def autoRelease(result,game_x,game_y):
                                 win32api.SetCursorPos((x1 + 15,y1 + 18))
                                 win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x1+15, y1+18, 0, 0)
                                 win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x1+15, y1+18, 0, 0)
-                                time.sleep(0.5)
+                                time.sleep(0.05)
 
                                 win32api.SetCursorPos((x2 + 15, y2 + 18))
                                 win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x2 + 15, y2 + 18, 0, 0)
                                 win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x2 + 15, y2 + 18, 0, 0)
-                                time.sleep(0.5)
+                                time.sleep(0.05)
                                 return True
     return False
+def autoRemove(squares,game_pos):
+    # 每次消除一对儿，QQ的连连看最多105对儿
+    game_x = game_pos[0] + 10
+    game_y = game_pos[1] + 181
+    # 判断是否消除完了？如果没有的话，点击重列后继续消除
+    for i in range(0,105):
+        autoRelease(squares,game_x,game_y)
 
-
-
-
+autoRemove(result,game_pos)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
