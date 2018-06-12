@@ -28,8 +28,8 @@ scim = ImageGrab.grab()
 scim.save('screen.png')
 screen_image = cv2.imread('screen.png')
 #游戏内容方块横纵个数 19*11  ,qq连连看的方块大小31*35 ，每个方框边缘像素宽4
-#方块连接区域距离左边距离14像素，顶部距离181像素
-game_x = game_pos[0] + 14
+#方块游戏区域距离左边距离10像素，顶部距离181像素
+game_x = game_pos[0] + 10
 game_y = game_pos[1] + 181
 all_square = []
 #游戏内容方块横纵个数 19*11  ,qq连连看的方块大小31*35 
