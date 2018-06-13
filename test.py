@@ -167,6 +167,8 @@ def autoRelease(result,game_x,game_y):
                                 return True
     return False
 
+
+
 window = win32gui.FindWindow(None,'QQ游戏 - 连连看角色版')
 shell = win32com.client.Dispatch("WScript.Shell")
 shell.SendKeys('%')
@@ -219,15 +221,62 @@ for square in all_square_list:
 result = np.transpose(record)
 print(result)
 #    return record
+for i in range(108):
+            autoRelease(result,game_x,game_y)
 
-#def autoRemove(squares,game_pos):
-    # 每次消除一对儿，QQ的连连看最多105对儿
-    #game_x = game_pos[0] + 10
-    #game_y = game_pos[1] + 181
-    # 判断是否消除完了？如果没有的话，点击重列后继续消除
-for i in range(0,105):
-    autoRelease(result,game_x,game_y)
+for i in range(5):
+    if  sum(sum(result))==0:
+        break
+    if sum(sum(result))!=0:
+        print ('进行第 %d次消除' % (i+2))
+        window = win32gui.FindWindow(None,'QQ游戏 - 连连看角色版')
+        shell = win32com.client.Dispatch("WScript.Shell")
+        shell.SendKeys('%')
+        win32gui.SetForegroundWindow(window)
+        pos = win32gui.GetWindowRect(window)
+        game_pos = (pos[0],pos[1])
+        
+        
+        scim = ImageGrab.grab()
+        scim.save('screen2.png')
+        screen_image2 = cv2.imread('screen2.png')
+        
+        all_square2 = []
+        
+        for x in range(0,19):
+            for y in range(0,11):
+                square2 = screen_image2[game_y +y*35:game_y + (y+1)*35, game_x + x*31:game_x + (x+1)*31]
+                all_square2.append(square2)
+        all_square_list2 = list(map(lambda square2 : square2[4:32,4:28],all_square2))
+        
+        types2=[]
+        empty_img2 = cv2.imread('empty.jpg')
+        types2.append(empty_img2)
+        for square in all_square_list2:
+            if not isImageExist(square, types2):
+                types2.append(square)
 
-#autoRemove(result,game_pos)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+#这部分，将所有切割出的19*11个方块分类，加上空白方块有38种，编号0-37.然后将19*11个方块依次比较来
+#做编号分类，将所有的方块，编码成数字矩阵。
+        record2 = []
+        line2 = []
+        for square in all_square_list2:
+            num = 0
+            for type1 in types2:
+                res2 = cv2.subtract(square, type1)
+                if not np.any(res2):
+                    line2.append(num)
+                    break
+                num+=1
+#这里line是二维数组，len（line）是它的行数，既纵列方块个数；
+#for square in all_square_list  这里是纵向遍历的，所以后面要transpose，恢复成正常视觉顺序。
+            if len(line2) == 11:
+                record2.append(line2)
+                line2=[]
+
+        result = np.transpose(record2)
+        print (np.transpose(record2))
+        for i in range(108):
+            autoRelease(result,game_x,game_y)
+
+
